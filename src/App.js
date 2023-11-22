@@ -5,13 +5,12 @@ import { observer } from "mobx-react-lite";
 import { useStore } from "./store";
 
 const App = () => {
+  const scoreStore = useStore("scoreStore");
   const gameInfoStore = useStore("gameInfoStore");
-  const {addScore, initScore} = gameInfoStore;
-  const step = 0.5;
-  const [speed, setSpeed] = useState(2);
+  const {addScore, initScore, updateBestScore} = scoreStore;
+  const {increaseSpeed, decreaseSpeed} = gameInfoStore;
   const canvasRef = useRef(null);
-  const bestScore = useRef(0);
-  const gameCount = useRef(0);
+  const [gameCount, setGameCount] = useState(0);
   let FRUITS = FRUITS_BASE;
 
   // let THEME = "base"; // { base, halloween }
@@ -23,20 +22,15 @@ const App = () => {
   //     FRUITS = FRUITS_BASE;
   // }
   
-  const distance = useMemo(() => {
-    console.log("useMemo");
-    return step * speed;
-  }, [speed])
+  // const distance = useMemo(() => {
+  //   return gameInfoStore.step * gameInfoStore.speed;
+  // }, [gameInfoStore.speed])
 
   const gameOver = () => {
     alert("game Over");
 
-    ++gameCount.current;
-
-    if (bestScore.current < gameInfoStore.score) {
-      bestScore.current = gameInfoStore.score;
-    }
-
+    setGameCount(prev => ++prev);
+    updateBestScore();
     initScore()
   }
 
@@ -49,7 +43,7 @@ const App = () => {
       options: {
         wireframes: false,
         background: "#F7F4C8",
-        width: 620,
+        width: 570,
         height: 850,
       }
     });
@@ -61,17 +55,17 @@ const App = () => {
       render: { fillStyle: "#E6B143" }
     });
 
-    const rightWall = Bodies.rectangle(605, 395, 30, 790, {
+    const rightWall = Bodies.rectangle(555, 395, 30, 790, {
       isStatic: true,
       render: { fillStyle: "#E6B143" }
     });
 
-    const ground = Bodies.rectangle(310, 820, 620, 60, {
+    const ground = Bodies.rectangle(285, 820, 570, 60, {
       isStatic: true,
       render: { fillStyle: "#E6B143" }
     });
 
-    const topLine = Bodies.rectangle(310, 150, 620, 2, {
+    const topLine = Bodies.rectangle(285, 150, 570, 2, {
       name: "topLine",
       isStatic: true,
       isSensor: true,
@@ -112,7 +106,6 @@ const App = () => {
         return;
       }
 
-      console.log("AA", distance);
       switch (event.code) {
         case "KeyA":
           if (interval)
@@ -121,7 +114,7 @@ const App = () => {
           interval = setInterval(() => {
             if (currentBody.position.x - currentFruit.radius > 30)
               Body.setPosition(currentBody, {
-                x: currentBody.position.x - distance,
+                x: currentBody.position.x - gameInfoStore.distance,
                 y: currentBody.position.y,
               });
           }, 5);
@@ -132,9 +125,9 @@ const App = () => {
             return;
 
           interval = setInterval(() => {
-            if (currentBody.position.x + currentFruit.radius < 590)
+            if (currentBody.position.x + currentFruit.radius < 540)
             Body.setPosition(currentBody, {
-              x: currentBody.position.x + distance,
+              x: currentBody.position.x + gameInfoStore.distance,
               y: currentBody.position.y,
             });
           }, 5);
@@ -173,8 +166,9 @@ const App = () => {
           const index = collision.bodyA.index;
 
           addScore(FRUITS[index].score * 2);
-          console.log("ADD Score");
-
+          if (index === 1) {
+            gameOver();
+          }
           // return 하면 for문 2번 실행 됨
           if (index === FRUITS.length - 1) {
             return;
@@ -211,11 +205,12 @@ const App = () => {
 
   return (
     <>
-      <h3>Score: {gameInfoStore.score}</h3>
-      <h3>BestScore: {bestScore.current}</h3>
-      <span>Speed: {speed} </span>
-      <button onClick={() => {setSpeed(prev => ++prev)}}>speed Up</button>
-      <button onClick={() => {setSpeed(prev => --prev)}}>speed Down</button>
+      <h3>Score: {scoreStore.score}</h3>
+      <h3>BestScore: {scoreStore.bestScore}</h3>
+      <span>Speed: {gameInfoStore.speed} </span>
+      <button onClick={increaseSpeed}>speed Up</button>
+      <button onClick={decreaseSpeed}>speed Down</button>
+      <canvas ref={canvasRef}/>
     </>
   )
 }
