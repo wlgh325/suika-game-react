@@ -7,6 +7,7 @@ class GameInfoStore extends RootStore {
     step = 0.5
     gameCount = 0;
     theme = "base";
+    gravityY = 1.5;
 
     constructor(rootStore) {
         super();
@@ -34,12 +35,11 @@ class GameInfoStore extends RootStore {
     }
 
     get fruits() {
-        console.log("fruits")
         switch (this.theme) {
-            case "base":
-                return FRUITS_BASE;
             case "halloween":
                 return FRUITS_HLW;
+            default:
+                return FRUITS_BASE;
         }
     }
 

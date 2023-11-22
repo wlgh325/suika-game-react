@@ -19,7 +19,6 @@ const App = () => {
   }
 
   const fruits = useMemo(() => gameInfoStore.fruits, [gameInfoStore.theme]);
-
   useEffect(() => {
     const engine = Engine.create();
     const render = Render.create({
@@ -34,6 +33,7 @@ const App = () => {
       }
     });
 
+    engine.gravity.y = gameInfoStore.gravityY;
     const world = engine.world;
 
     const leftWall = Bodies.rectangle(15, 395, 30, 790, {
@@ -185,7 +185,7 @@ const App = () => {
     });
 
     addFruit();
-  }, [gameInfoStore.gameCount])
+  }, [gameInfoStore.gameCount, fruits])
 
   return (
     <>
@@ -195,7 +195,13 @@ const App = () => {
       <button onClick={increaseSpeed}>speed Up</button>
       <button onClick={decreaseSpeed}>speed Down</button> <br/>
       <span>Theme: {gameInfoStore.theme}</span>
-      <button onClick={switchTheme}>Switch Theme</button>
+      <button onClick={() => {
+        const switchThemeMessage = "테마를 바꾸시겠습니까? \n 바꾸시면 게임을 다시 시작합니다";
+        if (window.confirm(switchThemeMessage)) {
+          switchTheme();
+          initScore();
+        }
+      }}>Switch Theme</button>
       <canvas ref={canvasRef}/>
     </>
   )
