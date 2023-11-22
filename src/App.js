@@ -1,6 +1,5 @@
 import { Bodies, Body, Engine, Events, Render, Runner, World } from "matter-js";
-import { FRUITS_BASE } from "./fruits";
-import { useEffect, useRef } from "react";
+import {useEffect, useMemo, useRef} from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "./store";
 
@@ -8,18 +7,8 @@ const App = () => {
   const scoreStore = useStore("scoreStore");
   const gameInfoStore = useStore("gameInfoStore");
   const {addScore, initScore, updateBestScore} = scoreStore;
-  const {increaseSpeed, decreaseSpeed, increaseGameCount } = gameInfoStore;
+  const {increaseSpeed, decreaseSpeed, increaseGameCount, switchTheme } = gameInfoStore;
   const canvasRef = useRef(null);
-  let FRUITS = FRUITS_BASE;
-
-  // let THEME = "base"; // { base, halloween }
-  // switch (THEME) {
-  //   case "halloween":
-  //     FRUITS = FRUITS_HLW;
-  //     break;
-  //   default:
-  //     FRUITS = FRUITS_BASE;
-  // }
 
   const gameOver = () => {
     alert("game Over");
@@ -28,6 +17,8 @@ const App = () => {
     updateBestScore();
     initScore()
   }
+
+  const fruits = useMemo(() => gameInfoStore.fruits, [gameInfoStore.theme]);
 
   useEffect(() => {
     const engine = Engine.create();
@@ -79,7 +70,7 @@ const App = () => {
 
     function addFruit() {
       const index = Math.floor(Math.random() * 5);
-      const fruit = FRUITS[index];
+      const fruit = fruits[index];
 
       const body = Bodies.circle(300, 50, fruit.radius, {
         index: index,
@@ -160,16 +151,16 @@ const App = () => {
         if (collision.bodyA.index === collision.bodyB.index) {
           const index = collision.bodyA.index;
 
-          addScore(FRUITS[index].score * 2);
+          addScore(fruits[index].score * 2);
 
           // return 하면 for문 2번 실행 됨
-          if (index === FRUITS.length - 1) {
+          if (index === fruits.length - 1) {
             return;
           }
 
           World.remove(world, [collision.bodyA, collision.bodyB]);
 
-          const newFruit = FRUITS[index + 1];
+          const newFruit = fruits[index + 1];
 
           const newBody = Bodies.circle(
             collision.collision.supports[0].x,
@@ -202,7 +193,9 @@ const App = () => {
       <h3>BestScore: {scoreStore.bestScore}</h3>
       <span>Speed: {gameInfoStore.speed} </span>
       <button onClick={increaseSpeed}>speed Up</button>
-      <button onClick={decreaseSpeed}>speed Down</button>
+      <button onClick={decreaseSpeed}>speed Down</button> <br/>
+      <span>Theme: {gameInfoStore.theme}</span>
+      <button onClick={switchTheme}>Switch Theme</button>
       <canvas ref={canvasRef}/>
     </>
   )
