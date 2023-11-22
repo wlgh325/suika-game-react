@@ -4,7 +4,7 @@ import RootStore from "./RootStore";
 class GameInfoStore extends RootStore {
     speed = 2;
     step = 0.5
-    rootStore;
+    gameCount = 0;
 
     constructor(rootStore) {
         super();
@@ -12,7 +12,9 @@ class GameInfoStore extends RootStore {
         makeObservable(this, {
             speed: observable,
             step: observable,
+            gameCount: observable,
             distance: computed,
+            increaseGameCount: action,
             increaseSpeed: action,
             decreaseSpeed: action,
         })
@@ -25,6 +27,8 @@ class GameInfoStore extends RootStore {
     get distance() {
         return this.speed * this.step;
     }
+
+    increaseGameCount = () => ++this.gameCount;
 }
 
 export default GameInfoStore;

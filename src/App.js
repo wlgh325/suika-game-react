@@ -1,6 +1,6 @@
 import { Bodies, Body, Engine, Events, Render, Runner, World } from "matter-js";
 import { FRUITS_BASE } from "./fruits";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "./store";
 
@@ -8,9 +8,8 @@ const App = () => {
   const scoreStore = useStore("scoreStore");
   const gameInfoStore = useStore("gameInfoStore");
   const {addScore, initScore, updateBestScore} = scoreStore;
-  const {increaseSpeed, decreaseSpeed} = gameInfoStore;
+  const {increaseSpeed, decreaseSpeed, increaseGameCount } = gameInfoStore;
   const canvasRef = useRef(null);
-  const [gameCount, setGameCount] = useState(0);
   let FRUITS = FRUITS_BASE;
 
   // let THEME = "base"; // { base, halloween }
@@ -21,15 +20,11 @@ const App = () => {
   //   default:
   //     FRUITS = FRUITS_BASE;
   // }
-  
-  // const distance = useMemo(() => {
-  //   return gameInfoStore.step * gameInfoStore.speed;
-  // }, [gameInfoStore.speed])
 
   const gameOver = () => {
     alert("game Over");
 
-    setGameCount(prev => ++prev);
+    increaseGameCount();
     updateBestScore();
     initScore()
   }
@@ -166,9 +161,7 @@ const App = () => {
           const index = collision.bodyA.index;
 
           addScore(FRUITS[index].score * 2);
-          if (index === 1) {
-            gameOver();
-          }
+
           // return 하면 for문 2번 실행 됨
           if (index === FRUITS.length - 1) {
             return;
@@ -201,7 +194,7 @@ const App = () => {
     });
 
     addFruit();
-  }, [gameCount])
+  }, [gameInfoStore.gameCount])
 
   return (
     <>

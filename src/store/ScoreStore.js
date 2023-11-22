@@ -4,7 +4,6 @@ import RootStore from "./RootStore";
 class ScoreStore extends RootStore {
     score = 0;
     bestScore = 0;
-    rootStore;
 
     constructor(rootStore) {
         super();

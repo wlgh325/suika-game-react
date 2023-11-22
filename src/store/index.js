@@ -2,12 +2,14 @@ import _ from "lodash";
 import { useLocalStore } from "mobx-react-lite";
 import { createContext, useContext } from "react";
 import GameInfoStore from "./GameInfoStore";
+import ScoreStore from "./ScoreStore";
 
 // 어느 컴포넌트에서 사용 할 수 있도록 context 사용
 const storeContext = createContext(null);
 
 const initRootStore = () => {
     const rootStore = {};
+    rootStore.scoreStore = new ScoreStore();
     rootStore.gameInfoStore = new GameInfoStore();
     return rootStore;
 }
