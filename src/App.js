@@ -2,12 +2,14 @@ import { Bodies, Body, Engine, Events, Render, Runner, World } from "matter-js";
 import {useEffect, useMemo, useRef} from "react";
 import { observer } from "mobx-react-lite";
 import { useStore } from "./store";
+import {Control, Score} from "./components";
+import {Box, Button, Grid} from "@mui/material";
 
 const App = () => {
-  const scoreStore = useStore("scoreStore");
   const gameInfoStore = useStore("gameInfoStore");
-  const {addScore, initScore, updateBestScore} = scoreStore;
-  const {increaseSpeed, decreaseSpeed, increaseGameCount, switchTheme } = gameInfoStore;
+  const {score, bestScore, addScore, initScore, updateBestScore} = useStore("scoreStore")
+  const {theme, gravityY, gameCount, speed,
+    increaseSpeed, decreaseSpeed, increaseGameCount, switchTheme } = gameInfoStore;
   const canvasRef = useRef(null);
 
   const gameOver = () => {
@@ -33,7 +35,7 @@ const App = () => {
       }
     });
 
-    engine.gravity.y = gameInfoStore.gravityY;
+    engine.gravity.y = gravityY;
     const world = engine.world;
 
     const leftWall = Bodies.rectangle(15, 395, 30, 790, {
@@ -153,7 +155,6 @@ const App = () => {
 
           addScore(fruits[index].score * 2);
 
-          // return 하면 for문 2번 실행 됨
           if (index === fruits.length - 1) {
             return;
           }
@@ -185,25 +186,21 @@ const App = () => {
     });
 
     addFruit();
-  }, [gameInfoStore.gameCount, fruits])
+  }, [gameCount, fruits])
 
   return (
-    <>
-      <h3>Score: {scoreStore.score}</h3>
-      <h3>BestScore: {scoreStore.bestScore}</h3>
-      <span>Speed: {gameInfoStore.speed} </span>
-      <button onClick={increaseSpeed}>speed Up</button>
-      <button onClick={decreaseSpeed}>speed Down</button> <br/>
-      <span>Theme: {gameInfoStore.theme}</span>
-      <button onClick={() => {
-        const switchThemeMessage = "테마를 바꾸시겠습니까? \n 바꾸시면 게임을 다시 시작합니다";
-        if (window.confirm(switchThemeMessage)) {
-          switchTheme();
-          initScore();
-        }
-      }}>Switch Theme</button>
-      <canvas ref={canvasRef}/>
-    </>
+      <>
+        <Score/>
+        <Control/>
+        <Button onClick={() => {
+          const switchThemeMessage = "테마를 바꾸시겠습니까? \n 바꾸시면 게임을 다시 시작합니다";
+          if (window.confirm(switchThemeMessage)) {
+            switchTheme();
+            initScore();
+          }
+        }}>Switch Theme</Button>
+        <canvas ref={canvasRef}/>
+      </>
   )
 }
 
