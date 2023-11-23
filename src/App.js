@@ -31,24 +31,24 @@ const App = () => {
         wireframes: false,
         background: "#F7F4C8",
         width: 570,
-        height: 850,
+        height: 800,
       }
     });
 
     engine.gravity.y = gravityY;
     const world = engine.world;
 
-    const leftWall = Bodies.rectangle(15, 395, 30, 790, {
+    const leftWall = Bodies.rectangle(15, 370, 30, 740, {
       isStatic: true,
       render: { fillStyle: "#E6B143" }
     });
 
-    const rightWall = Bodies.rectangle(555, 395, 30, 790, {
+    const rightWall = Bodies.rectangle(555, 370, 30, 740, {
       isStatic: true,
       render: { fillStyle: "#E6B143" }
     });
 
-    const ground = Bodies.rectangle(285, 820, 570, 60, {
+    const ground = Bodies.rectangle(285, 770, 570, 60, {
       isStatic: true,
       render: { fillStyle: "#E6B143" }
     });
@@ -190,15 +190,8 @@ const App = () => {
 
   return (
       <>
-        <Score/>
         <Control/>
-        <Button onClick={() => {
-          const switchThemeMessage = "테마를 바꾸시겠습니까? \n 바꾸시면 게임을 다시 시작합니다";
-          if (window.confirm(switchThemeMessage)) {
-            switchTheme();
-            initScore();
-          }
-        }}>Switch Theme</Button>
+        <Score/>
         <canvas ref={canvasRef}/>
       </>
   )
