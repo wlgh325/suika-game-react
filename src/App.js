@@ -7,11 +7,11 @@ import {Game} from "./components"
 const App = () => {
   return (
       <>
-      <ThemeProvider theme={theme}>
-        <Control/>
-        <Score/>
-        <Game/>
-      </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <Control/>
+            <Score/>
+            <Game/>
+          </ThemeProvider>
       </>
   )
 }
