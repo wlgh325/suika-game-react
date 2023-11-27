@@ -1,16 +1,13 @@
 import { observer } from "mobx-react-lite";
-import {Control, Score} from "./components";
 import {ThemeProvider} from "@mui/system"
 import theme from "./theme"
-import {Game} from "./components"
+import Router from "./routes"
 
 const App = () => {
   return (
       <>
           <ThemeProvider theme={theme}>
-            <Control/>
-            <Score/>
-            <Game/>
+              <Router/>
           </ThemeProvider>
       </>
   )
