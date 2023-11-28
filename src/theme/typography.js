@@ -1,7 +1,18 @@
 import palette from "./palette";
 
 const typography = {
-    fontFamily: ["sans-serif", "Arial"].join(","),
+    fontFamily: [
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+    ].join(","),
     fontWeightRegular: 400,
     fontWeightMedium: 500,
     fontWeightBold: 700,
@@ -12,14 +23,13 @@ const typography = {
     h2: {
         fontFamily: "",
         fontWeight: 700,
+        textTransform: "uppercase",
     },
     h3: {
         fontFamily: "",
-        textTransform: "uppercase",
     },
     h4: {
         fontFamily: "",
-        fontSize: 17,
         color: palette.common.black
     },
     h5: {

@@ -1,29 +1,28 @@
 import {Body, Bodies, Engine, Events, Render, Runner, World} from "matter-js"
 import {observer} from "mobx-react-lite"
 import {useEffect, useRef, useMemo} from "react"
-import {useStore} from "../store";
+import {useStore} from "../../store";
 
 const Game = () => {
     const gameInfoStore = useStore("gameInfoStore");
-    const {addScore, initScore, updateBestScore} = useStore("scoreStore")
-    const {theme, gravityY, gameCount, increaseGameCount} = gameInfoStore;
+    const {addScore, initScore, updateScoreList } = useStore("scoreStore")
+    const {theme, gravityY, gameCount, increaseGameCount, setFruitIndex} = gameInfoStore;
     const canvasRef = useRef(null);
 
     const gameOver = () => {
         alert("game Over");
 
         increaseGameCount();
-        updateBestScore();
-        initScore()
+        updateScoreList();
     }
 
     const fruits = useMemo(() => gameInfoStore.fruits, [theme]);
     useEffect(() => {
+        initScore();
         const engine = Engine.create();
         const render = Render.create({
         engine,
         canvas: canvasRef.current,
-        element: document.body,
         options: {
             wireframes: false,
             background: "#F7F4C8",
@@ -36,25 +35,25 @@ const Game = () => {
         const world = engine.world;
 
         const leftWall = Bodies.rectangle(15, 370, 30, 740, {
-        isStatic: true,
-        render: { fillStyle: "#E6B143" }
+            isStatic: true,
+            render: { fillStyle: "#d0d06e" }
         });
 
         const rightWall = Bodies.rectangle(555, 370, 30, 740, {
-        isStatic: true,
-        render: { fillStyle: "#E6B143" }
+            isStatic: true,
+            render: { fillStyle: "#d0d06e" }
         });
 
         const ground = Bodies.rectangle(285, 770, 570, 60, {
-        isStatic: true,
-        render: { fillStyle: "#E6B143" }
+            isStatic: true,
+            render: { fillStyle: "#d0d06e" }
         });
 
         const topLine = Bodies.rectangle(285, 150, 570, 2, {
-        name: "topLine",
-        isStatic: true,
-        isSensor: true,
-        render: { fillStyle: "#E6B143" }
+            name: "topLine",
+            isStatic: true,
+            isSensor: true,
+            render: { fillStyle: "#d0d06e" }
         })
 
         World.add(world, [leftWall, rightWall, ground, topLine]);
@@ -68,22 +67,20 @@ const Game = () => {
         let interval = null;
 
         function addFruit() {
-        const index = Math.floor(Math.random() * 5);
-        const fruit = fruits[index];
+            setFruitIndex();
+            const fruit = fruits[gameInfoStore.currentFruitIndex];
+            const body = Bodies.circle(300, 50, fruit.radius, {
+                index: gameInfoStore.currentFruitIndex,
+                isSleeping: true,
+                render: {
+                sprite: { texture: `${fruit.name}.png` }
+                },
+                restitution: 0.2,
+            });
 
-        const body = Bodies.circle(300, 50, fruit.radius, {
-            index: index,
-            isSleeping: true,
-            render: {
-            sprite: { texture: `${fruit.name}.png` }
-            },
-            restitution: 0.2,
-        });
-
-        currentBody = body;
-        currentFruit = fruit;
-
-        World.add(world, body);
+            currentFruit = fruit;
+            currentBody = body;
+            World.add(world, body);
         }
 
         window.onkeydown = (event) => {
@@ -152,6 +149,9 @@ const Game = () => {
 
             addScore(fruits[index].score * 2);
 
+            if (index === 1) {
+                gameOver();
+            }
             if (index === fruits.length - 1) {
                 return;
             }

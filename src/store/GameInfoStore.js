@@ -1,6 +1,7 @@
 import {action, computed, makeObservable, observable} from "mobx";
 import RootStore from "./RootStore";
 import {FRUITS_BASE, FRUITS_HLW} from "../fruits";
+import sr from "seedrandom";
 
 class GameInfoStore extends RootStore {
     speed = 2;
@@ -8,6 +9,9 @@ class GameInfoStore extends RootStore {
     gameCount = 0;
     theme = "base";
     gravityY = 1.5;
+    currentFruitIndex = 0;
+    nextFruitIndex = 0;
+    random;
 
     constructor(rootStore) {
         super();
@@ -17,13 +21,18 @@ class GameInfoStore extends RootStore {
             step: observable,
             gameCount: observable,
             theme: observable,
+            currentFruitIndex: observable,
+            nextFruitIndex: observable,
             distance: computed,
             fruits: computed,
             increaseGameCount: action,
             increaseSpeed: action,
             decreaseSpeed: action,
             switchTheme: action,
+            setFruitIndex: action,
         })
+
+        this.random = sr();
     }
 
     increaseSpeed = () => ++this.speed;
@@ -41,6 +50,11 @@ class GameInfoStore extends RootStore {
             default:
                 return FRUITS_BASE;
         }
+    }
+
+    setFruitIndex = () => {
+        this.currentFruitIndex = this.nextFruitIndex
+        this.nextFruitIndex = Math.floor(this.random() * 5);
     }
 
     increaseGameCount = () => ++this.gameCount;

@@ -1,31 +1,38 @@
-import {action, makeObservable, observable} from "mobx";
+import {action, computed, makeObservable, observable} from "mobx";
 import RootStore from "./RootStore";
 
 class ScoreStore extends RootStore {
-    score = 0;
-    bestScore = 0;
+    currentScore = 0;
+    scoreList = [];
 
     constructor(rootStore) {
         super();
         this.rootStore = rootStore;
         makeObservable(this, {
-            score: observable,
-            bestScore: observable,
+            currentScore: observable,
+            scoreList: observable,
+            bestScore: computed,
+            sortedScoreList: computed,
             addScore: action,
             initScore: action,
-            updateBestScore: action
         })
     }
 
-    addScore = (point) => this.score = this.score + point;
-
-    initScore = () => this.score = 0;
-
-    updateBestScore = () => {
-        if (this.bestScore < this.score) {
-            this.bestScore = this.score;
-        }
+    get bestScore() {
+        // this.scoreList.sort();
+        // return this.scoreList.length === 0 ? 0 : this.scoreList[0];
+        return this.scoreList.length === 0 ? 0 : Math.max(...this.scoreList);
     }
+
+    get sortedScoreList() {
+        return this.scoreList.slice().sort((a,b) => b - a);
+    }
+
+    addScore = (point) => this.currentScore = this.currentScore + point;
+
+    updateScoreList = () => this.scoreList.push(this.currentScore);
+
+    initScore = () => this.currentScore = 0;
 }
 
 export default ScoreStore;
