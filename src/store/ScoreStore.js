@@ -3,7 +3,7 @@ import RootStore from "./RootStore";
 
 class ScoreStore extends RootStore {
     currentScore = 0;
-    scoreList = [];
+    scoreList = [0,0,0];
 
     constructor(rootStore) {
         super();
@@ -25,7 +25,7 @@ class ScoreStore extends RootStore {
     }
 
     get sortedScoreList() {
-        return this.scoreList.slice().sort((a,b) => b - a);
+        return this.scoreList.slice().sort((a,b) => b - a).slice(0, 3);
     }
 
     addScore = (point) => this.currentScore = this.currentScore + point;
