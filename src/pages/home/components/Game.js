@@ -149,9 +149,6 @@ const Game = () => {
 
             addScore(fruits[index].score * 2);
 
-            if (index === 1) {
-                gameOver();
-            }
             if (index === fruits.length - 1) {
                 return;
             }
