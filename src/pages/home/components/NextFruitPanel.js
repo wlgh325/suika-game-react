@@ -1,6 +1,6 @@
 import {observer} from "mobx-react-lite";
 import {Box, Typography} from "@mui/material";
-import {useStore} from "../../store";
+import {useStore} from "../../../store";
 
 const NextFruitPanel = () => {
     const gameInfoStore = useStore("gameInfoStore");

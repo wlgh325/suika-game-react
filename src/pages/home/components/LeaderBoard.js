@@ -1,7 +1,8 @@
 import {observer} from "mobx-react-lite";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import _ from "lodash";
-import {useStore} from "../../store";
+import {useStore} from "../../../store";
+import {Paper} from "../../../components";
 
 const LeaderBoard = () => {
     const {sortedScoreList} = useStore("scoreStore");

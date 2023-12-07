@@ -6,17 +6,17 @@ const palette = {
         white: "#ffffff"
     },
     primary: {
-       main: "#ab0021",
+       main: "#ff9800",
        dark: "#111111",
        contrastText: "#fff",
     },
     secondary: {
-        main: "#ab0021",
-        dark: "#ab0021",
-        contrastText: "fff",
+        main: "#0066ff",
+        dark: "#2341e0",
+        contrastText: "#fff",
     },
     error: {
-        main: "#e63321"
+        main: "#B00020"
     },
     warning: {
         main: "#ff9800"
@@ -29,10 +29,8 @@ const palette = {
     },
     divider: "#e5e5e5",
     background: {
-        paper: "#ffffff" ,
-        default: "#f4f4f4",
-        search: "#f5f5f5",
-        cell: "#f6f6f6",
+        paper: "#FFDF11E2" ,
+        default: "#e39b3d",
         backdrop: alpha("#dcebff", 0.5),
         progress: "#f3f3f3",
         button: "#efefef",

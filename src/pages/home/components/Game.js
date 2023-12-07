@@ -1,12 +1,12 @@
 import {Body, Bodies, Engine, Events, Render, Runner, World} from "matter-js"
 import {observer} from "mobx-react-lite"
 import {useEffect, useRef, useMemo} from "react"
-import {useStore} from "../../store";
+import {useStore} from "../../../store";
 
 const Game = () => {
     const gameInfoStore = useStore("gameInfoStore");
     const {addScore, initScore, updateScoreList } = useStore("scoreStore")
-    const {theme, gravityY, gameCount, increaseGameCount, setFruitIndex} = gameInfoStore;
+    const {gravityY, gameCount, increaseGameCount, setFruitIndex} = gameInfoStore;
     const canvasRef = useRef(null);
 
     const gameOver = () => {
@@ -16,7 +16,7 @@ const Game = () => {
         updateScoreList();
     }
 
-    const fruits = useMemo(() => gameInfoStore.fruits, [theme]);
+    const fruits = useMemo(() => gameInfoStore.fruits, [gameInfoStore.fruits]);
     useEffect(() => {
         initScore();
         const engine = Engine.create();

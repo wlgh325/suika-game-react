@@ -1,8 +1,8 @@
 import {observer} from "mobx-react-lite";
-import {useStore} from "../../store";
+import {useStore} from "../../../store";
 import {Box, Typography} from "@mui/material"
 import {ArrowDownward, ArrowUpward, Speed} from "@mui/icons-material";
-import {ControlButton} from "./index";
+import {ControlButton} from "../../../components";
 
 const Control = () => {
     const {speed, theme, increaseSpeed, decreaseSpeed, switchTheme} = useStore("gameInfoStore");
